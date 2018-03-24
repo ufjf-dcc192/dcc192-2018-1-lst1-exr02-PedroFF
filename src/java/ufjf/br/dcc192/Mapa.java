@@ -2,7 +2,9 @@ package ufjf.br.dcc192;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,18 +46,31 @@ public class Mapa extends HttpServlet {
                 }
                 break;
             case "cor-pais":
-                // Map.Entry<String, ArrayList <String>> cores = new HashMap<>;
+                Map<String, List<String>> cores = new HashMap<>();
                 for (Map.Entry<String, String> pais : paises.entrySet()) {
-                    out.println("<dt><h3>" + pais.getKey() + "</h3></dt>");
-                    out.println("<dd><h4>" + pais.getValue() + "</h4></dd>");
-                }
-                break;
-        }
-        out.println("</dl>");
-        out.println("<a href = '?ordem=pais-cor'>País --> Cor </a></br>");
-        out.println("<a href = '?ordem=cor-pais'>Cor --> Países </a>");
-        out.println("</body>");
-        out.println("</html>");
-    }
+                    if (cores.containsKey(pais.getValue())) {
+                        cores.get(pais.getValue()).add(pais.getKey());
+                    } else {
+                        ArrayList<String> colecao = new ArrayList();
+                        colecao.add(pais.getKey());
+                        cores.put(pais.getValue(), colecao);
+                    }
+                    for (Map.Entry<String, List<String>> cor : cores.entrySet()) {
+                        out.println("<dt><h3>" + cor.getKey() + "</h3></dt>");
+                        for (String c : cor.getValue()) {
+                            out.println("<dd><h4>" + c + "</h4></dd>");
+                        }
 
+                    }
+
+                    break;
+                }
+        }
+                out.println("</dl>");
+                out.println("<a href = '?ordem=pais-cor'> País --> Cor </a></br>");
+                out.println("<a href = '?ordem=cor-pais'> Cor --> Países </a>");
+                out.println("</body>");
+                out.println("</html>");
+
+    }
 }
